@@ -35,37 +35,21 @@ agg_projs_risk %>%
   write.csv("data/overall.csv")
 
 
-### RB ----
+### write csvs ----
 
 dir.create("data",recursive = T)
 
-agg_projs_risk %>% 
-  filter(pos == "RB") %>% 
-  filter(avg_type == "robust") %>% 
-  arrange(tier,desc(points),sd_pts,ceiling,pos_ecr) %>% 
-  select(first_name, last_name, team, floor_rank, ceiling_rank,tier, pos_ecr,overall_ecr,sd_pts) %>%
-  write.csv(file = "data/rb.csv")
+positions<- c("RB","WR","QB","TE","K","DST")
 
-### QB ----
-agg_projs_risk %>% 
-  filter(pos == "QB") %>% 
-  filter(avg_type == "robust") %>% 
-  arrange(tier,desc(points),sd_pts,ceiling,pos_ecr) %>% 
-  select(avg_type,first_name, last_name, team, floor_rank, ceiling_rank,tier, pos_ecr,overall_ecr,sd_pts) %>%
-  write.csv(file = "data/qb.csv")
+for(i in positions){
+  
+  agg_projs_risk %>% 
+    filter(pos == i) %>% 
+    filter(avg_type == "robust") %>% 
+    arrange(tier,desc(points),sd_pts,ceiling,pos_ecr) %>% 
+    select(first_name, last_name, team, floor_rank, ceiling_rank,tier, pos_ecr,overall_ecr,sd_pts) %>%
+    write.csv(file = sprintf("data/%s.csv",i))
+}
 
-### WR ----
 
-agg_projs_risk %>% 
-  filter(pos == "QB") %>% 
-  filter(avg_type == "robust") %>% 
-  arrange(tier,desc(points),sd_pts,ceiling,pos_ecr) %>% 
-  select(avg_type,first_name, last_name, team, floor_rank, ceiling_rank,tier, pos_ecr,overall_ecr,sd_pts) %>%
-  write.csv(file = "data/qb.csv")
-
-### TE ----
-
-### DST ----
-
-### Draft order --  
 
