@@ -28,23 +28,40 @@ agg_projs_risk<- agg_ff_projs %>%
 agg_projs_risk %>% View()
 
 agg_projs_risk %>% 
-  filter(avg_type != "weighted") %>% 
-  arrange(tier,sd_pts,ceiling,pos_ecr) %>% 
-  select(avg_type,pos,first_name, last_name, team, floor_rank, ceiling_rank,tier, overall_ecr,sd_pts)
+  filter(avg_type == "robust") %>% 
+  arrange(tier,desc(points),sd_pts,ceiling,pos_ecr) %>% 
+  mutate(name = paste(first_name, last_name)) %>% 
+  select( pos, name, team, floor_rank, ceiling_rank,tier, pos_ecr,overall_ecr,sd_pts) %>% 
+  write.csv("data/overall.csv")
 
 
 ### RB ----
 
+dir.create("data",recursive = T)
+
 agg_projs_risk %>% 
   filter(pos == "RB") %>% 
-  filter(avg_type != "weighted") %>% 
-  arrange(desc(points),sd_pts,ceiling,pos_ecr) %>% 
-  select(avg_type,first_name, last_name, team, floor_rank, ceiling_rank,tier, overall_ecr,sd_pts)
-
+  filter(avg_type == "robust") %>% 
+  arrange(tier,desc(points),sd_pts,ceiling,pos_ecr) %>% 
+  select(first_name, last_name, team, floor_rank, ceiling_rank,tier, pos_ecr,overall_ecr,sd_pts) %>%
+  write.csv(file = "data/rb.csv")
 
 ### QB ----
+agg_projs_risk %>% 
+  filter(pos == "QB") %>% 
+  filter(avg_type == "robust") %>% 
+  arrange(tier,desc(points),sd_pts,ceiling,pos_ecr) %>% 
+  select(avg_type,first_name, last_name, team, floor_rank, ceiling_rank,tier, pos_ecr,overall_ecr,sd_pts) %>%
+  write.csv(file = "data/qb.csv")
 
 ### WR ----
+
+agg_projs_risk %>% 
+  filter(pos == "QB") %>% 
+  filter(avg_type == "robust") %>% 
+  arrange(tier,desc(points),sd_pts,ceiling,pos_ecr) %>% 
+  select(avg_type,first_name, last_name, team, floor_rank, ceiling_rank,tier, pos_ecr,overall_ecr,sd_pts) %>%
+  write.csv(file = "data/qb.csv")
 
 ### TE ----
 
