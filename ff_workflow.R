@@ -11,13 +11,16 @@ season <- 2020
 
 ff_projs <- ffanalytics::scrape_data(src = c("CBS","FantasyPros","FantasySharks"),
                             pos = c("QB", "RB", "WR", "TE", "K","DST"),
-                            season = 2022,
+                            season = 2023,
                             week = 0
                             )
-scoring$rec <- rec
+
 
 
 ## create projections
+#keepers <- c("14104","11675","14797","11244","13132","13404","14802","15254","13164","13589","13130","14832","7836","13319","13131","15256","12626","15262","12801","15281")
+keepers <- c("")
+
 agg_ff_projs <- projections_table(ff_projs)
 
 agg_projs_risk<- agg_ff_projs %>% 
@@ -25,10 +28,15 @@ agg_projs_risk<- agg_ff_projs %>%
   add_uncertainty() %>% 
   add_player_info()
 
-agg_projs_risk %>% View()
+agg_projs_risk %>% 
+  select(id, first_name,last_name) %>% 
+  View()
+
+
 
 agg_projs_risk %>% 
   filter(avg_type == "robust") %>% 
+  filter(!id %in% {{ keepers }} ) %>% 
   arrange(tier,desc(points),sd_pts,ceiling,pos_ecr) %>% 
   mutate(name = paste(first_name, last_name)) %>% 
   select( pos, name, team, floor_rank, ceiling_rank,tier, pos_ecr,overall_ecr,sd_pts) %>% 
@@ -45,6 +53,7 @@ for(i in positions){
   
   agg_projs_risk %>% 
     filter(pos == i) %>% 
+    filter(!id %in% {{ keepers }} ) %>% 
     filter(avg_type == "robust") %>% 
     arrange(tier,desc(points),sd_pts,ceiling,pos_ecr) %>% 
     select(first_name, last_name, team, floor_rank, ceiling_rank,tier, pos_ecr,overall_ecr,sd_pts) %>%
